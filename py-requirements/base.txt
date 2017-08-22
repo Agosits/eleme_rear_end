@@ -1,0 +1,12 @@
+Django
+django-extensions
+
+# Rest Framework
+djangorestframework
+
+# for date processing
+python-dateutil
+
+# Logging
+json-logging-py
+
