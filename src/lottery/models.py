@@ -70,6 +70,6 @@ class UserCount(models.Model):
       percent: the percentage of number of times of whole user who submit lottery
   
     """
-    user = models.OneToOneField(UserInfo)
+    user = models.OneToOneField(UserInfo, unique=True)
     number = models.IntegerField(default=0)
     percent = models.FloatField(default=0)

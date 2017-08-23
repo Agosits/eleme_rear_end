@@ -1,6 +1,13 @@
 CONSTANT = 10000
 
 
+def get_sh_sz_args(date=None):
+    assert date, "invalid date"
+    # use some method to get Shanghai Composite Index and Shenzhen Stock Index
+    # then write these args into ActivityInfo table to compute prize lottery number
+    pass
+
+
 def lottery_algorithm(sh_args=None, sz_args=None, total=None):
     assert sh_args, "invalid sh_args"
     assert sz_args, "invalid sz_args"
