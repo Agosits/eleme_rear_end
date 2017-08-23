@@ -1,14 +1,16 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+import uuid
 
-
-class Order(models.Model):
+class UserInfo(models.Model):
     """"
-    this is a related experiment order table to show the lottery
+    this is a related userinfo table to show the lottery
+        user: the id of user account
+        score: the score of this user which will be used when submit lottery
     """
-    user = models.ForeignKey(User)
-    order_name = models.CharField(max_length=256, blank=False)
+    user = models.OneToOneField(User)
+    score = models.PositiveIntegerField(default=0)
 
 
 class PrizeInfo(models.Model):
@@ -39,9 +41,9 @@ class ActivityInfo(models.Model):
     """
     start_time = models.DateField()
     end_time = models.DateField()
-    public_time = models.DateField()
-    sh_args = models.FloatField()
-    sz_args = models.FloatField()
+    public_time = models.DateField(null=True)
+    sh_args = models.FloatField(null=True)
+    sz_args = models.FloatField(null=True)
 
 
 class UserLottery(models.Model):
@@ -53,10 +55,10 @@ class UserLottery(models.Model):
       user_lottery_number: the number of this lottery towards prize_info
       is_winning: show whether the lottery is winning
     """
-    user = models.ForeignKey(User, related_name="user_id")
-    order = models.OneToOneField(Order, related_name='order_id')
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(UserInfo, related_name='user_id')
     prize_info = models.ForeignKey(PrizeInfo, related_name="prize_info_id")
-    user_lottery_number = models.PositiveIntegerField()
+    user_lottery_number = models.IntegerField(default=0)
     is_winning = models.BooleanField(default=False)
 
 
@@ -68,6 +70,6 @@ class UserCount(models.Model):
       percent: the percentage of number of times of whole user who submit lottery
   
     """
-    user = models.OneToOneField(User)
-    number = models.PositiveIntegerField()
-    percent = models.FloatField()
+    user = models.OneToOneField(UserInfo)
+    number = models.IntegerField(default=0)
+    percent = models.FloatField(default=0)
