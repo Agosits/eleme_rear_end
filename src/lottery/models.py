@@ -3,9 +3,10 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 import uuid
 
+
 class UserInfo(models.Model):
     """"
-    this is a related userinfo table to show the lottery
+    this is a related userinfo table to show the user info
         user: the id of user account
         score: the score of this user which will be used when submit lottery
     """
@@ -32,16 +33,16 @@ class PrizeInfo(models.Model):
 
 class ActivityInfo(models.Model):
     """
-     this is the table about activity information, which include blow:
-     start_time: the start time of activity
-     end_time: the end time of activity
-     public_time: the public time to show the lottery number
-     sh_args: The Shanghai Composite Index　of public time
-     zs_args: Shenzhen Stock Index　of public time
+    this is the table about activity information, which include blow:
+        start_time: the start time of activity
+        end_time: the end time of activity
+        public_time: the public time to show the lottery number
+        sh_args: the ShangHai composite index of public time
+        sz_args: the ShenZhen stock index of public time
     """
     start_time = models.DateField()
     end_time = models.DateField()
-    public_time = models.DateField(null=True)
+    public_time = models.DateField()
     sh_args = models.FloatField(null=True)
     sz_args = models.FloatField(null=True)
 

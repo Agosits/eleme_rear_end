@@ -10,6 +10,7 @@ class ActivityView(GenericAPIView):
     """"
         used to get the activity info and prize info
     """
+
     def get(self, request):
 
         current_day = datetime.date.today()
@@ -36,26 +37,32 @@ class LotteryView(GenericAPIView):
     
     
     """
-    def post(self, request, prize_id):
 
+    def post(self, request, prize_id):
+        percent = 0
         lottery_row = UserLottery.objects.create(user=request.user, prize_info=prize_id)
         prize_row = PrizeInfo.objects.get(pk=prize_id)
         prize_row.prize_lottery_total += 1
         lottery_row.user_lottery_number = prize_row.prize_lottery_total
+        user_lottery_number = lottery_row.user_lottery_number
         prize_row.save()
         lottery_row.save()
         try:
-            user_count = UserCount.objects.create(user=request.user, number=1, percent=0)
+            UserCount.objects.create(user=request.user, number=1, percent=0)
         except Exception as e:
             exist_user_count = UserCount.objects.get(user=request.user)
             exist_user_count.number += 1
-            exist_user_count.percent = exist_user_count.number // (len(UserCount.objects.all()) + 1)
+            percent = exist_user_count.percent = exist_user_count.number \
+                                                 // (len(UserCount.objects.all()) + 1)
             exist_user_count.save()
+        return Response({"user_lottery_number": user_lottery_number,
+                         "user_lottery_percent": percent})
 
 
 class LotteryPublicView(GenericAPIView):
     """
-        used to compute the prize lottery number and write the table to show who have won
+        used to compute the prize lottery number 
+        and write the user lottery table to show who have won
     """
 
     def get(self, request, activity_id):
@@ -67,4 +74,3 @@ class LotteryPublicView(GenericAPIView):
             for user_lottery in UserLottery.objects.filter(prize_info=prize, user_lottery_number=prize_lottery_number):
                 user_lottery.is_winning = True
                 user_lottery.save()
-
